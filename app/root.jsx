@@ -1,4 +1,13 @@
-import { Links, LiveReload, Meta, Outlet, Scripts } from "@remix-run/react";
+import {
+  Link,
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  isRouteErrorResponse,
+  useRouteError,
+} from "@remix-run/react";
 import style from "~/styles/index.css";
 import Header from "~/components/header";
 import Footer from "./components/footer";
@@ -24,7 +33,7 @@ export function links() {
     {
       rel: "preconnect",
       href: "https://fonts.gstatic.com",
-      crossorigin: "true",
+      crossOrigin: "true",
     },
     {
       rel: "stylesheet",
@@ -61,4 +70,22 @@ function Document({ children }) {
       </body>
     </html>
   );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  // when true, this is what used to go to `CatchBoundary`
+  if (isRouteErrorResponse(error)) {
+    return (
+      <Document>
+        <p className="error">
+          {error.status} {error.statusText}
+        </p>
+        <Link className="error-enlace" to="/">
+          Tal ves quieras volver a inicio
+        </Link>
+      </Document>
+    );
+  }
 }
